@@ -282,7 +282,7 @@ public class PDFCreator {
 		// TODO Auto-generated method stub
 		// String path = "";
 		String content = "";
-		int countLines = 0;
+
 		ArrayList<String> lines;
 
 		if (args.length >= 1) {
@@ -291,12 +291,15 @@ public class PDFCreator {
 			for (String path : args) {
 				
 				content = "";
-				countLines = 0;
 
 				File file = new File(path);
-
-				if (!file.canRead() || !file.isFile())
+				
+				// error case
+				if (!file.canRead() || !file.isFile()) {
+					System.err.println("Can't open file!");
 					System.exit(0);
+				}
+					
 
 				BufferedReader in = null;
 				try {
