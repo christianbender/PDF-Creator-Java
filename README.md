@@ -26,7 +26,7 @@ $ ./PDFCreator.jar myFile1.txt myFile2.txt ... myFileN.txt
 
 ### Examples 
 
-In the repo you will find some example textfiles and PDF-files.  
+In the repo you will find some example text-files and PDF-files.  
 
 ### Contributing 
 
