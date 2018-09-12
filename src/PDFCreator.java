@@ -296,8 +296,8 @@ public class PDFCreator {
 				
 				// error case
 				if (!file.canRead() || !file.isFile()) {
-					System.err.println("Can't open file!");
-					System.exit(1);
+					System.err.printf("Can't open %s file!\n", path);
+					continue;
 				}
 					
 
