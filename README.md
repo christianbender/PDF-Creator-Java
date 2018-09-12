@@ -1,7 +1,7 @@
 ## Simple PDF-Creator  
 
 This project is a simple command-line PDF-Creator for textfiles.  
-The project is written in Java. You will find a JAR file, called ```PDFCReator.jar``` as executable. 
+The project is written in Java. You will find a JAR file, called ```PDFCreator.jar``` as executable. 
 
 The application creates PDF files in DIN A4 format and font size 12.  
 
