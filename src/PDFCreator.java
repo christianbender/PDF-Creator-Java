@@ -237,7 +237,7 @@ public class PDFCreator {
 				y -= 40;
 				headerFlag = true;
 				line = cleanHeader(line, i);
-				NUMLINES = 55;
+				NUMLINES -= 3;
 			} 
 //			else if (header){
 //				ans += "/F1 12 Tf";
