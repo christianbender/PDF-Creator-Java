@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 public class PDFCreator {
 
-	public static final int NUMLINES = 58;
+	public static int NUMLINES = 58;
+//	public static final int NUMLINES_HEADER = 56;
 
 	// static parts
 	public static final String BEGIN = "%PDF-1.4\n";
@@ -30,6 +31,10 @@ public class PDFCreator {
 
 	public static final String TRAILER = "trailer\n<< /Size 7\n/Info 1 0 R\n/Root 2 0 R\n>>\n";
 
+	// global flag for method createPDFMulti(...)
+	// this flag will be set in the method createContentObject(...) 
+	public static boolean headerFlag = false;
+	
 	public static String createObject1(String title) {
 		return String.format("1 0 obj\n<< /Title %s >>\nendobj\n", title);
 	}
@@ -90,7 +95,7 @@ public class PDFCreator {
 	}
 
 	public static ArrayList<String> createPartition(int i,
-			ArrayList<String> lines) {
+			ArrayList<String> lines, int numLines) {
 		ArrayList<String> list = new ArrayList<String>();
 		int j = i;
 		int counter = 0;
@@ -98,7 +103,7 @@ public class PDFCreator {
 		while (j < lines.size() && loop) {
 			list.add(lines.get(j));
 			counter++;
-			if (counter == NUMLINES)
+			if (counter == numLines)
 				loop = false;
 			j++;
 		}
@@ -163,12 +168,13 @@ public class PDFCreator {
 			// lines));
 			content += createPageObject(currentObj, currentObj + 1);
 			content += createContentObject(currentObj + 1,
-					createPartition(index, lines));
+					createPartition(index, lines, NUMLINES));
 			pages.add(currentObj);
 			contents.add(currentObj + 1);
 
 			numObjects += 2;
 			index += NUMLINES;
+			headerFlag = false;
 		}
 
 		// System.err.printf("\t AFTER for-loop content=%s\n", content); //DEBUG
@@ -220,11 +226,29 @@ public class PDFCreator {
 				"%d 0 obj\n<< /Length 41\n>>\nstream\n/F1 12 Tf\n", its);
 		int x = 20;
 		int y = 800;
+		int i = 0;
+		String format = "";
+		NUMLINES = 58;
 		for (String line : lines) {
-			ans += String.format("BT\n%d %d Td\n(%s) Tj\nET\n", x, y, line);
+			
+			format = "/F1 12 Tf\n";
+			if ((i = containsHeader(line)) != -1) {
+				format = "/F1 48 Tf\n";
+				y -= 40;
+				headerFlag = true;
+				line = cleanHeader(line, i);
+				NUMLINES = 55;
+			} 
+//			else if (header){
+//				ans += "/F1 12 Tf";
+//				header = false;
+//			}
+			
+			ans += String.format("BT\n %s \n%d %d Td\n(%s) Tj\nET\n",format, x, y, line);
 			if (y < 0)
 				break;
 			y -= 14;
+			
 		}
 		ans += "endstream\nendobj\n";
 		return ans;
@@ -261,6 +285,18 @@ public class PDFCreator {
 		}
 
 		return list;
+	}
+	
+	/**
+	 * Scans for formatting statement.
+	 * Returns -1 if none formatting statement exists. Otherwise its index.
+	 */
+	public static int containsHeader(String line) {
+		return line.indexOf("/header");
+	}
+	
+	public static String cleanHeader(String line, int index) {
+		return line.substring(index+7, line.length());
 	}
 	
 	public static String getName(String path) {

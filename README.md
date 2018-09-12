@@ -24,9 +24,16 @@ You can also put multiple files.
 $ ./PDFCreator.jar myFile1.txt myFile2.txt ... myFileN.txt
 ```
 
+### Features  
+
+* You can declare headings with ```/header``` at the begin of the line.  
+For example ```/header Welcome```.  
+![How the feature look like](screenshots/headers.png "Heading feature")
+
+
 ### Examples 
 
-In the repo you will find some example text-files and PDF-files.  
+In the repo you will find some example text-files and PDF-files in the directory [examples](examples)    
 
 ### Contributing 
 
