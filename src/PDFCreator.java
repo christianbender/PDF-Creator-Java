@@ -69,20 +69,42 @@ public class PDFCreator {
 		return ans;
 	}
 
+	/**
+	 * Creates a content object
+	 * @param its -- Its ref number
+	 * @param content -- Its content
+	 * @return
+	 */
 	public static String createPageObject(int its, int content) {
 		return String.format("%d 0 obj\n<< /Type /Page\n/Parent 3 0 "
 				+ "R\n/Contents %d 0 R\n>>\nendobj\n", its, content);
 	}
 
+	/**
+	 * Returns the position of the ref table
+	 * @param file --- (String) Content of the file (inclusive ref table)
+	 * @return
+	 */
 	public static int getPositionRef(String file) {
 		return file.indexOf("xref");
 	}
 
+	/**
+	 * Creates the end part of the PDF-file
+	 * @param file -- String content
+	 * @return
+	 */
 	public static String createEnd(String file) {
 		return String.format("startxref\n%d\n", getPositionRef(file))
 				+ "%%EOF\n";
 	}
 
+	/**
+	 * Creates a single page PDF file.
+	 * @param lines
+	 * @param title
+	 * @return
+	 */
 	public static String createPDF(ArrayList<String> lines, String title) {
 		String content = "";
 		content += BEGIN;
@@ -94,6 +116,13 @@ public class PDFCreator {
 		return content;
 	}
 
+	/**
+	 * Returns a portion of the given content [lines]
+	 * @param i -- Index 
+	 * @param lines -- list of all normalized lines
+	 * @param numLines --- length of the portion
+	 * @return
+	 */
 	public static ArrayList<String> createPartition(int i,
 			ArrayList<String> lines, int numLines) {
 		ArrayList<String> list = new ArrayList<String>();
@@ -110,6 +139,12 @@ public class PDFCreator {
 		return list;
 	}
 
+	/**
+	 * Returns the content with changed kids ref.
+	 * @param content (String) --- content of the file
+	 * @param pages -- ref numbers of the page objects
+	 * @return
+	 */
 	public static String addKids(String content, ArrayList<Integer> pages) {
 		String ans = "";
 
@@ -141,6 +176,12 @@ public class PDFCreator {
 		return ans;
 	}
 
+	/**
+	 * Returns a multi page PDF file.
+	 * @param lines --- (String) content of the full pdf file
+	 * @param title -- (String) title
+	 * @return
+	 */
 	public static String createPDFMulti(ArrayList<String> lines, String title) {
 
 		// static parts
@@ -197,10 +238,21 @@ public class PDFCreator {
 		return content;
 	}
 
+	/**
+	 * Returns the position of the i-th object in the file.
+	 * @param content -- (String) content of the file
+	 * @param i -- ref number of the specified object
+	 * @return
+	 */
 	public static int findObject(String content, int i) {
 		return content.indexOf(String.format("%d 0 obj", i));
 	}
 
+	/**
+	 * Returns a 10-digit position number for the ref table
+	 * @param num -- converted number
+	 * @return
+	 */
 	public static String generatePositionRef(int num) {
 		String ans = "";
 		int digits = Integer.toString(num).length();
@@ -210,7 +262,13 @@ public class PDFCreator {
 		ans += Integer.toString(num);
 		return ans;
 	}
-
+	
+	/**
+	 * Returns a ref table
+	 * @param content -- (String) content of the file up to the ref table.
+	 * @param numObjects -- numbers of objects
+	 * @return
+	 */
 	public static String createRefTab(String content, int numObjects) {
 		String ans = String.format("xref\n0 %d\n0000000000 65535 f \n",
 				numObjects + 1);
@@ -221,6 +279,12 @@ public class PDFCreator {
 		return ans;
 	}
 
+	/**
+	 * Generates a content object (String)
+	 * @param its --- its ref number
+	 * @param lines --- content
+	 * @return
+	 */
 	public static String createContentObject(int its, ArrayList<String> lines) {
 		String ans = String.format(
 				"%d 0 obj\n<< /Length 41\n>>\nstream\n/F1 12 Tf\n", its);
@@ -253,13 +317,24 @@ public class PDFCreator {
 		ans += "endstream\nendobj\n";
 		return ans;
 	}
-
+	
+	/**
+	 * Returns the trailer
+	 * @param numObjects
+	 * @return
+	 */
 	public static String createTrailer(int numObjects) {
 		return String.format(
 				"trailer\n<<\n /Size %d\n/Info 1 0 R\n/Root 2 0 R\n>>\n",
 				numObjects + 1);
 	}
-
+	
+	/**
+	 * Converts the lines of the text-file into normalized lines 
+	 * for the PDF-file
+	 * @param content --- (String) content of the text-file
+	 * @return
+	 */
 	public static ArrayList<String> generateLines(String content) {
 		ArrayList<String> list = new ArrayList<String>();
 		char arr[] = content.toCharArray();
@@ -295,10 +370,21 @@ public class PDFCreator {
 		return line.indexOf("/header");
 	}
 	
+	/**
+	 * Returns the given line without "/header"
+	 * @param line
+	 * @param index -- (int) start index of "/header"
+	 * @return
+	 */
 	public static String cleanHeader(String line, int index) {
 		return line.substring(index+7, line.length());
 	}
 	
+	/**
+	 * Returns the filename
+	 * @param path
+	 * @return
+	 */
 	public static String getName(String path) {
 		String name = "";
 		int i = 0;
@@ -312,6 +398,7 @@ public class PDFCreator {
 	}
 
 	/**
+	 * Main-program
 	 * @param args
 	 */
 	public static void main(String[] args) {
